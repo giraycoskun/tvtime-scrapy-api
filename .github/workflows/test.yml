@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.11.2
+          python-version: 3.10.10
       - uses: actions/cache@v3
         with:
           key: ${{ github.ref }}
@@ -22,10 +22,8 @@ jobs:
       - name: Run tests
         run: |
           coverage run --source=src -m pytest
-          coverage report
 
-      - name: Generate coverage badge
-        run: |
-          cov_percent=$(coverage report --fail-under=80 | grep -oE '[0-9]+\.[0-9]+%' | tr -d '%')
-          badge=$(python -c "import shields; print(shields.Badge('coverage', f'{cov_percent:.1f}%', color='brightgreen'))")
-          echo "::set-output name=badge::$badge"
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}

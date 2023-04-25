@@ -21,6 +21,10 @@ poetry export -f requirements.txt --output requirements.txt --with docs,dev,test
 uvicorn src.main:app --reload
 ```
 
+```bash
+coverage run --source src -m pytest
+```
+
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
