@@ -2,8 +2,7 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.11.2-blue.svg)
 ![Work in Progress](https://img.shields.io/badge/Work-In%20Progress-red)
-![Coverage Badge](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.badge&url=https%3A%2F%2Fgithub.com%2Fgiraycoskun%2Ftvtime-scrapy-api%2Factions%2Fruns%2F4802019585%2Flogs%2Fbadge%3Fevent%3Dcoverage)
-
+[![Coverage Status](https://coveralls.io/repos/github/giraycoskun/tvtime-scrapy-api/badge.svg?branch=main)](https://coveralls.io/github/giraycoskun/tvtime-scrapy-api?branch=main)
 
 It is a REST API that uses the Scrapy framework to work as unofficial TVTime API.
 
@@ -24,7 +23,6 @@ uvicorn src.main:app --reload
 ```bash
 coverage run --source src -m pytest
 ```
-
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
