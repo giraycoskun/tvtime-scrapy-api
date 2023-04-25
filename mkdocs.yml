@@ -1,0 +1,35 @@
+site_name: TVTime Scrapy API Docs
+
+# repo_url: 
+
+theme:
+  name: material
+  features:
+    - navigation.footer
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - toc.follow
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ['src']  # search packages in the src folder
+          options:
+            docstring_style: "google"
+            show_root_heading: true
+            show_if_no_docstring: true
+
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.snippets:
+      base_path: ["."]
+
+nav:
+  - Home: index.md

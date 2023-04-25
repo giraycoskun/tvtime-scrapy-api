@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "tvtime-scrapy-api"
+version = "0.1.0"
+description = "Unofficial TVTime API via Scrapy"
+authors = ["giraycoskun <giraycoskun@sabanciuniv.edu>"]
+license = "MIT"
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.95.1"
+Scrapy = "^2.8.0"
+uvicorn = "^0.21.1"
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.docs.dependencies]
+mkdocs-material = "^9.1.8"
+mkdocstrings = "^0.21.2"
+
+
+[tool.poetry.group.dev.dependencies]
+autopep8 = "^2.0.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
