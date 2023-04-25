@@ -10,6 +10,8 @@ automat==22.10.0 ; python_version >= "3.11" and python_version < "4.0" \
 autopep8==2.0.2 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:86e9303b5e5c8160872b2f5ef611161b2893e9bfe8ccc7e2f76385947d57a2f1 \
     --hash=sha256:f9849cdd62108cb739dbcdbfb7fdcc9a30d1b63c4cc3e1c1f893b5360941b61c
+badge==2020.12.3 ; python_version >= "3.11" and python_version < "4.0" \
+    --hash=sha256:a7e201bbd3014d6cdb5f88f6ffa5acea370d9466280a231067cb37fcb35038c9
 certifi==2022.12.7 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3 \
     --hash=sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18
@@ -244,6 +246,8 @@ fastapi==0.95.1 ; python_version >= "3.11" and python_version < "4.0" \
 filelock==3.12.0 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:ad98852315c2ab702aeb628412cbf7e95b7ce8c3bf9565670b4eaecf1db370a9 \
     --hash=sha256:fc03ae43288c013d2ea83c8597001b1129db351aad9c57fe2409327916b8e718
+format-keys==2020.12.3 ; python_version >= "3.11" and python_version < "4.0" \
+    --hash=sha256:9f031bd8d297fa1a56550686c4e7508bd2cb2f290c4af069b43505f91bcd8d46
 ghp-import==2.1.0 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:8337dd7b50877f163d4c0289bc1f1c7f127550241988d568c1db512c4324a619 \
     --hash=sha256:9c535c4c61193c2df8871222567d7fd7e5014d835f97dc7b7439069e2413d343
@@ -640,6 +644,8 @@ service-identity==21.1.0 ; python_version >= "3.11" and python_version < "4.0" \
 setuptools==67.7.2 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:23aaf86b85ca52ceb801d32703f12d77517b2556af839621c641fca11287952b \
     --hash=sha256:f104fa03692a2602fa0fec6c6a9e63b6c8a968de13e17c026957dd1f53d80990
+shields==2020.12.3 ; python_version >= "3.11" and python_version < "4.0" \
+    --hash=sha256:ce88c5cf81263e335179dd1cc8f46b9e1ad44229809e3fc82cfa845f9f92b1e1
 six==1.16.0 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254

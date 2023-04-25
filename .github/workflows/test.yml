@@ -1,25 +1,31 @@
 name: test
 on:
-    push:
-      branches:
-        - main
+  push:
+    branches:
+      - main
 jobs:
-    test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-python@v4
-          with:
-            python-version: 3.11.2
-        - uses: actions/cache@v2
-          with:
-            key: ${{ github.ref }}
-            path: .cache
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
-        - name: Run tests
-          run: |
-            coverage run --source=src -m pytest  
-  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.11.2
+      - uses: actions/cache@v3
+        with:
+          key: ${{ github.ref }}
+          path: .cache
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests
+        run: |
+          coverage run --source=src -m pytest
+          coverage report
+
+      - name: Generate coverage badge
+        run: |
+          cov_percent=$(coverage report --fail-under=80 | grep -oE '[0-9]+\.[0-9]+%' | tr -d '%')
+          badge=$(python -c "import shields; print(shields.Badge('coverage', f'{cov_percent:.1f}%', color='brightgreen'))")
+          echo "::set-output name=badge::$badge"

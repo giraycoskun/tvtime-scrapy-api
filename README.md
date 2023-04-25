@@ -2,7 +2,7 @@
 
 ![Python Version](https://img.shields.io/badge/python-3.11.2-blue.svg)
 ![Work in Progress](https://img.shields.io/badge/Work-In%20Progress-red)
-![Coverage Badge](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.badge&url=https%3A%2F%2Fgithub.com%2Fgiraycoskun%2Ftvtime-scrapy-api%2Factions%2Fruns%2F4801599532%2Flogs%2Fbadge%3Fevent%3Dcoverage)
+![Coverage Badge](https://img.shields.io/badge/dynamic/json?color=brightgreen&label=coverage&query=%24.badge&url=https%3A%2F%2Fgithub.com%2Fgiraycoskun%2Ftvtime-scrapy-api%2Factions%2Fruns%2F4802019585%2Flogs%2Fbadge%3Fevent%3Dcoverage)
 
 
 It is a REST API that uses the Scrapy framework to work as unofficial TVTime API.
