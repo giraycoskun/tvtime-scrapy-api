@@ -23,6 +23,8 @@ plugins:
             docstring_style: "google"
             show_root_heading: true
             show_if_no_docstring: true
+  - swagger-ui-tag:
+      tryItOutEnabled: True
 
 markdown_extensions:
   - tables
@@ -33,3 +35,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Reference: 
+    - reference/reference.md
+    - reference/api.md
+  - openapi.md
