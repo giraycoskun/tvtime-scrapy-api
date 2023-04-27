@@ -6,4 +6,4 @@ hide:
 
 # OpenAPI Swagger UI
 
-<swagger-ui src="/assets/openapi.json"/>
+<swagger-ui src="../assets/openapi.json"/>
