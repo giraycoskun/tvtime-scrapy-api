@@ -1,5 +1,5 @@
 # My
-*.json
+/temp
 *.html
 
 # Byte-compiled / optimized / DLL files
