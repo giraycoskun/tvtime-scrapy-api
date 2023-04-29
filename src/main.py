@@ -20,5 +20,8 @@ app.include_router(tvtime.router)
 async def root():
     return {"Hello": "World"}
 
-openapi_spec = app.openapi()
-print(openapi_spec)
+
+def write_openapi_spec():
+    with open("openapi.json", "w") as f:
+        f.write(app.openapi())
+        

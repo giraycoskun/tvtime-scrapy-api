@@ -1,3 +1,0 @@
-# Reference
-
-## Table of Contents

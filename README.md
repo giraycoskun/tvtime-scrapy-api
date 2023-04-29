@@ -1,3 +1,5 @@
+<img src="https://cdn-icons-png.flaticon.com/512/10194/10194172.png" width="10%">
+
 # TVTime Scrapy API
 
 ![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)
@@ -7,6 +9,10 @@
 It is a REST API that uses the Scrapy framework to work as unofficial TVTime API.
 
 **Docs:** <https://giraycoskun.github.io/tvtime-scrapy-api/>
+
+**Reference:** <https://giraycoskun.github.io/tvtime-scrapy-api/reference/index/>
+
+**Swagger UI:** <https://giraycoskun.github.io/tvtime-scrapy-api/openapi/>
 
 ## Docker
 
