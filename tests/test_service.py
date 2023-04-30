@@ -1,6 +1,6 @@
 import pytest
 
-from src.service.spider import TVTimeSpider
+from src.repository.spider import TVTimeSpider
 
 def test_spider():
     spider = TVTimeSpider()
