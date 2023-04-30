@@ -15,7 +15,8 @@ Scrapy = "^2.8.0"
 uvicorn = "^0.21.1"
 python-dotenv = "^1.0.0"
 loguru = "^0.7.0"
-celery = "^5.2.7"
+celery = {extras = ["redis"], version = "^5.2.7"}
+redis-om = "^0.1.2"
 
 
 [tool.poetry.group.docs.dependencies]
