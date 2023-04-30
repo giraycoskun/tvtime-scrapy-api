@@ -7,11 +7,55 @@
     },
     "paths": {
         "/tvtime/scrape": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "GET Scrape Task Status",
+                "operationId": "scrape_tvtime_scrape_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Task Id",
+                            "type": "string"
+                        },
+                        "name": "task_id",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Created"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "tvtime"
                 ],
-                "summary": "Scrape",
+                "summary": "POST Scrape Task",
                 "operationId": "scrape_tvtime_scrape_post",
                 "requestBody": {
                     "content": {
@@ -110,19 +154,17 @@
             },
             "TVTimeUser": {
                 "title": "TVTimeUser",
-                "required": [
-                    "username",
-                    "password"
-                ],
                 "type": "object",
                 "properties": {
                     "username": {
                         "title": "Username",
-                        "type": "string"
+                        "type": "string",
+                        "default": "giraycoskundev"
                     },
                     "password": {
                         "title": "Password",
-                        "type": "string"
+                        "type": "string",
+                        "default": "dpn95GpDamzJRv"
                     }
                 }
             },
