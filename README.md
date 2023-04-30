@@ -14,6 +14,10 @@ It is a REST API that uses the Scrapy framework to work as unofficial TVTime API
 
 **Swagger UI:** <https://giraycoskun.github.io/tvtime-scrapy-api/openapi/>
 
+## Architecture
+
+![Architecture](https://drive.google.com/uc?export=view&id=1EOAMykKKfjmsLSeXlrIw4QOsD3BSgAZU)
+
 ## Docker
 
 ## Local Development
@@ -30,6 +34,12 @@ uvicorn src.main:app --reload
 coverage run --source src -m pytest
 ```
 
+```bash
+celery -A src.repository.celery_repository worker --loglevel=DEBUG -P threads
+```
+
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
+![Celery](https://img.shields.io/badge/Celery-37814A?logo=celery&logoColor=fff&style=for-the-badge)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
