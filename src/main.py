@@ -1,5 +1,8 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
+from json import dump
+from celery import Celery
+import os
 
 from src.routes import tvtime
 
@@ -21,7 +24,7 @@ async def root():
     return {"Hello": "World"}
 
 
-def write_openapi_spec():
-    with open("openapi.json", "w") as f:
-        f.write(app.openapi())
+def write_openapi_spec(app : FastAPI) -> None:
+    with open("./docs/assets/openapi.json", "w") as f:
+        dump(app.openapi(), f, indent=4)
         

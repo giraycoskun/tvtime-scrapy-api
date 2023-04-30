@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Response, BackgroundTasks, Depends
+from fastapi import APIRouter, Response, Depends
 from typing import Annotated
-from pydantic import BaseModel
 
-from src.service.tvtime import TVService
+from src.repository.models import TVTimeUser
+from src.service.tvtime import TVTimeService
 
 router = APIRouter(
     prefix="/tvtime",
@@ -14,15 +14,19 @@ router = APIRouter(
 )
 
 
-class TVTimeUser(BaseModel):
-    username: str
-    password: str
+@router.post("/scrape", summary="POST Scrape Task")
+def scrape(user: TVTimeUser, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
+    task_id = tvtime_service.scrape(user)
+    return {
+        "status": "success",
+        "task_id": task_id
+    }
 
 
-@router.post("/scrape")
-def scrape(user: TVTimeUser, tvtime_service: Annotated[TVService, Depends()], background_tasks: BackgroundTasks) -> Response:
-    background_tasks.add_task(tvtime_service.scrape, user)
-    return Response(status_code=201)
+@router.get("/scrape", summary="GET Scrape Task Status")
+def scrape(task_id: str, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
+    response = tvtime_service.get_status(task_id)
+    return response
 
 
 @router.get("/watch-next")
