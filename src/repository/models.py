@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class TVTimeUser(BaseModel):
-    username: str=environ['TVTIME_USERNAME']
-    password: str=environ['TVTIME_PASSWORD']
+    username: str
+    password: str
 
 class TVTimeDataModel(EmbeddedJsonModel):
     username: str=Field(index=True, primary_key=True)

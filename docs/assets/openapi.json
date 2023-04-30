@@ -12,7 +12,8 @@
                     "tvtime"
                 ],
                 "summary": "GET Scrape Task Status",
-                "operationId": "scrape_tvtime_scrape_get",
+                "description": "_summary_\n\nArgs:\n    task_id (str): _description_\n    tvtime_service (Annotated[TVTimeService, Depends): _description_\n\nReturns:\n    Response: _description_",
+                "operationId": "scrape_status_tvtime_scrape_get",
                 "parameters": [
                     {
                         "required": true,
@@ -56,7 +57,7 @@
                     "tvtime"
                 ],
                 "summary": "POST Scrape Task",
-                "operationId": "scrape_tvtime_scrape_post",
+                "operationId": "start_scrape_tvtime_scrape_post",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -154,17 +155,19 @@
             },
             "TVTimeUser": {
                 "title": "TVTimeUser",
+                "required": [
+                    "username",
+                    "password"
+                ],
                 "type": "object",
                 "properties": {
                     "username": {
                         "title": "Username",
-                        "type": "string",
-                        "default": "giraycoskundev"
+                        "type": "string"
                     },
                     "password": {
                         "title": "Password",
-                        "type": "string",
-                        "default": "dpn95GpDamzJRv"
+                        "type": "string"
                     }
                 }
             },

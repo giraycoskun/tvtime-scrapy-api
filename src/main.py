@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from dotenv import load_dotenv
 from json import dump
 from celery import Celery
-import os
 
 from src.routes import tvtime
 
