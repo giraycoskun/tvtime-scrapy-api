@@ -55,5 +55,8 @@ nav:
   - Home: index.md
   - Reference: 
     - reference/index.md
-    - reference/api.md
+    - reference/routes.md
+    - reference/services.md
+    - reference/repository.md
+    - reference/spider.md
   - openapi.md

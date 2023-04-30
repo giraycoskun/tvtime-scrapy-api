@@ -15,7 +15,7 @@ router = APIRouter(
 
 
 @router.post("/scrape", summary="POST Scrape Task")
-def scrape(user: TVTimeUser, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
+def start_scrape(user: TVTimeUser, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
     task_id = tvtime_service.scrape(user)
     return {
         "status": "success",
@@ -24,7 +24,16 @@ def scrape(user: TVTimeUser, tvtime_service: Annotated[TVTimeService, Depends()]
 
 
 @router.get("/scrape", summary="GET Scrape Task Status")
-def scrape(task_id: str, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
+def scrape_status(task_id: str, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
+    """_summary_
+
+    Args:
+        task_id (str): _description_
+        tvtime_service (Annotated[TVTimeService, Depends): _description_
+
+    Returns:
+        Response: _description_
+    """    
     response = tvtime_service.get_status(task_id)
     return response
 
