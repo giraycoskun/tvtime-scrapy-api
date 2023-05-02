@@ -1,20 +1,19 @@
 from loguru import logger
 from fastapi import Depends
 from typing import Annotated
-from celery import Celery, result
 
 from src.repository.celery_repository import scrape_task, celery
 from src.repository.redis_repository import RedisClient
 from src.repository.models import TVTimeUser
 
-class TVTimeService:
+class TVTimeScraperService:
 
     def __init__(self, redis_client: Annotated[RedisClient, Depends()]):
         self.celery = celery
         self.redis = redis_client
 
     def scrape(self, user:TVTimeUser) -> str:
-        logger.info(f"Scraping Started")
+        logger.debug(f"Scraping Service Started")
         task = scrape_task.delay(user)
         return task.id
 
@@ -26,4 +25,3 @@ class TVTimeService:
             "id": result.id,
             "status": result.status
         }
-        
