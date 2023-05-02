@@ -48,10 +48,29 @@ class TVTimeSpider(scrapy.Spider):
     def parse_to_watch(self, response):
         result = {'name': 'to-watch', 'data': {}}
         items = response.selector.xpath('//*[@id="to-watch"]/ul')
-        title_not_watched = items[0].xpath('.//img/@alt').getall()
-        title_not_started = items[1].xpath('.//img/@alt').getall()
-        result['data']['not-watched'] = title_not_watched
-        result['data']['not-started'] = title_not_started
+        titles = response.selector.xpath('//*[@id="to-watch"]/h1')
+        for idx in range(len(items)):
+            title = titles[idx].xpath('./text()').get().strip()
+            result['data'][title] = {}
+            new_tags = items[idx].xpath('.//div[@class="new-label"]/text()').getall()
+            shows = items[idx].xpath('.//img/@alt').getall()
+            episodes = items[idx].xpath('.//div[@class="episode-details poster-details"]/h2/a/text()').getall()
+            for show, episode in zip(shows, episodes):
+                tag = False
+                if len(new_tags) > 0:
+                    tag = True
+                    new_tags.pop(0)
+                temp = {
+                    'episode': episode,
+                    'is_new': tag
+                        }
+                result['data'][title][show] = temp
+            
+             
+        # title_not_watched = items[0].xpath('.//img/@alt').getall()
+        # title_not_started = items[1].xpath('.//img/@alt').getall()
+        # result['data']['not-watched'] = title_not_watched
+        # result['data']['not-started'] = title_not_started
         # script_content = response.selector.xpath('//div[@class="main-block-container"]/script/text()').get()
         # data_content = re.search(r'(tvst.data = )(.*)(;)', script_content, re.DOTALL).group(2)
         # data_content = data_content.replace('\&quot;', ' ')
@@ -120,6 +139,7 @@ class RedisWriterPipeline:
     def open_spider(self, spider):
         logger.debug(f"Opening spider {spider.name}")
         self.data = TVTimeDataModel(username=self.username)
+        self.data.expire(86400)
         self.data.save()
 
     def process_item(self, item, spider):
