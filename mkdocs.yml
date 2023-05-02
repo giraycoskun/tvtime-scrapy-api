@@ -52,7 +52,10 @@ markdown_extensions:
   - md_in_html
 
 nav:
-  - Home: index.md
+  - Home: 
+    - index.md
+    - Getting Started: getting-started.md
+    - System Reference: system.md
   - Reference: 
     - reference/index.md
     - reference/routes.md

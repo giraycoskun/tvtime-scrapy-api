@@ -20,6 +20,10 @@ It is a REST API that uses the Scrapy framework to work as unofficial TVTime API
 
 ## Docker
 
+```bash
+docker pull redis/redis-stack
+```
+
 ## Local Development
 
 ```bash
@@ -35,7 +39,7 @@ coverage run --source src -m pytest
 ```
 
 ```bash
-celery -A src.repository.celery_repository worker --loglevel=DEBUG -P threads
+celery -A src.repository.celery_repository worker --concurrency 2 --loglevel=DEBUG
 ```
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
