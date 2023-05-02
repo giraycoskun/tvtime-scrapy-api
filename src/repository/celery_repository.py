@@ -14,28 +14,10 @@ celery.conf.result_backend = os.environ.get(
     "CELERY_RESULT_BACKEND", "redis://localhost:6379")
 celery.conf.task_serializer = 'pickle'
 celery.conf.accept_content = ['pickle', 'json']
-
+celery.conf.worker_max_tasks_per_child = 1
 
 @celery.task(name="scrape_task")
 def scrape_task(user: TVTimeUser):
-    logger.info(f"Scraping Task Started")
-    logger.debug(f"User: {user}")
-    logger.debug(f"User: {user.username}")
-    spider_process = CrawlerRunner(settings={
-        "ITEM_PIPELINES": {
-            "src.repository.spider.RedisWriterPipeline": 1,
-        }
-    })
-    input_args = {"user": user}
-    spider_process.crawl(TVTimeSpider, **input_args)
-    reactor.run()
-    #spider_process.crawl(TVTimeSpider, **input_args)
-    #spider_process.start()
-    #spider_process.join()
-
-    return True
-
-def crawler_task(user: TVTimeUser):
     logger.info(f"Scraping Task Started")
     logger.debug(f"User: {user}")
     logger.debug(f"User: {user.username}")
@@ -44,8 +26,6 @@ def crawler_task(user: TVTimeUser):
             "src.repository.spider.RedisWriterPipeline": 1,
         }
     })
-    input_args = {"user":user}
+    input_args = {"user": user}
     spider_process.crawl(TVTimeSpider, **input_args)
     spider_process.start()
-    spider_process.join()
-    return True
