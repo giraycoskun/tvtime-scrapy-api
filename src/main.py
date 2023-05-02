@@ -1,9 +1,8 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from json import dump
-from celery import Celery
 
-from src.routes import tvtime
+from src.routes import scraper, tvtime, user
 
 load_dotenv()
 
@@ -15,7 +14,9 @@ app = FastAPI(
     redoc_url="/redoc"
 )
 
+app.include_router(scraper.router)
 app.include_router(tvtime.router)
+app.include_router(user.router)
 
 
 @app.get("/")
@@ -26,4 +27,6 @@ async def root():
 def write_openapi_spec(app : FastAPI) -> None:
     with open("./docs/assets/openapi.json", "w") as f:
         dump(app.openapi(), f, indent=4)
-        
+
+# TODO: User route
+# TODO: Authentication Scheme

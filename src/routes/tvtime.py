@@ -1,43 +1,29 @@
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 from typing import Annotated
 
-from src.repository.models import TVTimeUser
-from src.service.tvtime import TVTimeService
+from src.service.tvtime_data import TVTimeDataService
 
 router = APIRouter(
-    prefix="/tvtime",
-    tags=["tvtime"],
+    prefix="/data",
+    tags=["data"],
     responses={
-        201: {"description": "Created"},
-        404: {"description": "Not found"}
+        200: {"description": "Success"},
     },
 )
 
+@router.get("/status", summary="Get Data Status")
+def get_status():
+    data = {"status": "not implemented"}
+    return JSONResponse(content=data, status_code=200)
 
-@router.post("/scrape", summary="POST Scrape Task")
-def start_scrape(user: TVTimeUser, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
-    task_id = tvtime_service.scrape(user)
-    return {
-        "status": "success",
-        "task_id": task_id
-    }
+@router.get("/all", summary="Get All Data")
+def get_data(tvtime_data_serive: Annotated[TVTimeDataService, Depends()]):
+    data  = tvtime_data_serive.get_all_data('giraycoskundev')
+    return JSONResponse(content=data.dict(), status_code=200)
+    
 
-
-@router.get("/scrape", summary="GET Scrape Task Status")
-def scrape_status(task_id: str, tvtime_service: Annotated[TVTimeService, Depends()]) -> Response:
-    """_summary_
-
-    Args:
-        task_id (str): _description_
-        tvtime_service (Annotated[TVTimeService, Depends): _description_
-
-    Returns:
-        Response: _description_
-    """    
-    response = tvtime_service.get_status(task_id)
-    return response
-
-
-@router.get("/watch-next")
-async def get_watch_next() -> Response:
-    return Response(status_code=201)
+@router.get("/to_watch", summary="Get To Watch List")
+def get_to_watch():
+    data = {"status": "not implemented"}
+    return JSONResponse(content=data, status_code=200)
