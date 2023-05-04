@@ -6,58 +6,13 @@
         "version": "0.1.0"
     },
     "paths": {
-        "/scraper/scrape": {
-            "get": {
-                "tags": [
-                    "scraper"
-                ],
-                "summary": "Scrape Task Status",
-                "description": "_summary_\n\nArgs:\n    task_id (str): _description_\n    tvtime_service (Annotated[TVTimeService, Depends): _description_\n\nReturns:\n    Response: _description_",
-                "operationId": "scrape_status_scraper_scrape_get",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "title": "Task Id",
-                            "type": "string"
-                        },
-                        "name": "task_id",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "204": {
-                        "description": "Scrape Task Accepted"
-                    },
-                    "404": {
-                        "description": "Not found"
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
+        "/scraper/": {
             "post": {
                 "tags": [
                     "scraper"
                 ],
                 "summary": "Start Scrape Task",
-                "operationId": "start_scrape_scraper_scrape_post",
+                "operationId": "start_scrape_scraper__post",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -96,13 +51,71 @@
                 }
             }
         },
-        "/data/status": {
+        "/scraper/{task_id}": {
             "get": {
                 "tags": [
-                    "data"
+                    "scraper"
+                ],
+                "summary": "Scrape Task Status",
+                "description": "_summary_\n\nArgs:\n    task_id (str): Celery Task ID\n    tvtime_scraper_service (Annotated[TVTimeScraperService, Depends): TVTimeScraperService \n\nReturns:\n    Response: status of the celery task",
+                "operationId": "scrape_status_scraper__task_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Task Id",
+                            "type": "string"
+                        },
+                        "name": "task_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Scrape Task Accepted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/status": {
+            "get": {
+                "tags": [
+                    "tvtime"
                 ],
                 "summary": "Get Data Status",
-                "operationId": "get_status_data_status_get",
+                "operationId": "get_status_status_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -111,17 +124,38 @@
                                 "schema": {}
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/data/all": {
+        "/all-data": {
             "get": {
                 "tags": [
-                    "data"
+                    "tvtime"
                 ],
                 "summary": "Get All Data",
-                "operationId": "get_data_data_all_get",
+                "operationId": "get_all_data_all_data_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -130,23 +164,134 @@
                                 "schema": {}
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
                     }
                 }
             }
         },
-        "/data/to_watch": {
+        "/watch-next": {
             "get": {
                 "tags": [
-                    "data"
+                    "tvtime"
                 ],
-                "summary": "Get To Watch List",
-                "operationId": "get_to_watch_data_to_watch_get",
+                "summary": "Get Watch Next List",
+                "operationId": "get_watch_next_watch_next_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/not-watched-for-while": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Not Watched For While List",
+                "operationId": "get_not_watched_for_while_not_watched_for_while_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/not-started-yet": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Not Started Yet List",
+                "operationId": "get_not_started_yet_not_started_yet_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
                             }
                         }
                     }
@@ -174,7 +319,7 @@
         },
         "/": {
             "get": {
-                "summary": "Root",
+                "summary": "Hello",
                 "operationId": "root__get",
                 "responses": {
                     "200": {

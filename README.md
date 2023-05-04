@@ -14,6 +14,12 @@ It is a REST API that uses the Scrapy framework to work as unofficial TVTime API
 
 **Swagger UI:** <https://giraycoskun.github.io/tvtime-scrapy-api/openapi/>
 
+## Security
+
+As TvTime does not have an OAUTH Code Grant Flow, it is not possible to use the API with a token and thus it requires TVTime username and password. Therefore it is not up-to security standards and it cannot promise that without the oauth2.0 scheme.
+
+However it only uses username and password to scrape data and does not store the password.
+
 ## Architecture
 
 ![Architecture](https://drive.google.com/uc?export=view&id=1EOAMykKKfjmsLSeXlrIw4QOsD3BSgAZU)
@@ -35,12 +41,35 @@ uvicorn src.main:app --reload
 ```
 
 ```bash
+pytest -o log_cli=true -o log_cli_level=DEBUG 
+```
+
+```bash
 coverage run --source src -m pytest
 ```
 
 ```bash
 celery -A src.repository.celery_repository worker --concurrency 2 --loglevel=DEBUG
 ```
+
+### TODO
+
+- [ ] Add tests to cover data services & celery
+- [ ] Add user authentication
+- [ ] Add exception handling from scrapy
+- [ ] Add exception handling from redis
+
+## Reference
+
+**FASTAPI**: <https://fastapi.tiangolo.com/>
+
+**REDIS**: <https://redis.io/>
+
+**CELERY**: <https://docs.celeryproject.org/en/stable/>
+
+**SCRAPY**: <https://docs.scrapy.org/en/latest/>
+
+---
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
