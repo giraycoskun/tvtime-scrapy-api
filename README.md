@@ -24,6 +24,8 @@ However it only uses username and password to scrape data and does not store the
 
 ![Architecture](https://drive.google.com/uc?export=view&id=1EOAMykKKfjmsLSeXlrIw4QOsD3BSgAZU)
 
+![API](https://drive.google.com/uc?export=view&id=1AhywkAhRfkQv_xdmGha4vFxjuqfKLAkk)
+
 ## Docker
 
 ```bash

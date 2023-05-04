@@ -42,4 +42,10 @@
     └── test_spider.py
 ```
 
+## Architecture & API
+
+![Architecture](https://drive.google.com/uc?export=view&id=1EOAMykKKfjmsLSeXlrIw4QOsD3BSgAZU)
+
+![API](https://drive.google.com/uc?export=view&id=1AhywkAhRfkQv_xdmGha4vFxjuqfKLAkk)
+
 ---
