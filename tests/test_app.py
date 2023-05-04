@@ -12,9 +12,12 @@ import src.repository.redis_repository
 
 @pytest.fixture(scope="function")
 def test_redis_mock():
-    class RedisMock():
+    class RedisMock:
 
-        def from_url(self, url, decode_responses=True):
+        def __init__(self, url="") -> None:
+            pass
+
+        def from_url(self, url="", decode_responses=True):
             return self
 
         def exists(self, key):
@@ -66,7 +69,8 @@ def test_redis_model_mock():
 
 @pytest.fixture(scope="function")
 def test_app(monkeypatch, test_redis_mock, test_redis_model_mock):
-    monkeypatch.setattr(redis, 'Redis', test_redis_mock())
+    monkeypatch.setattr(redis, 'Redis', test_redis_mock)
+    monkeypatch.setattr(src.repository.redis_repository, 'get_redis_connection', test_redis_mock)
     monkeypatch.setattr(src.repository.redis_repository,
                         'TVTimeDataModel', test_redis_model_mock)
     client = TestClient(app)
