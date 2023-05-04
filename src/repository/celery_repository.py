@@ -1,11 +1,12 @@
 from loguru import logger
 from celery import Celery
+from celery.exceptions import Ignore
 import os
-from scrapy.crawler import CrawlerProcess, CrawlerRunner
-from twisted.internet import reactor
+from redis_om import NotFoundError
+from scrapy.crawler import CrawlerProcess
 
 from src.repository.spider import TVTimeSpider
-from src.repository.models import TVTimeUser
+from src.repository.models import TVTimeUser, TVTimeDataModel
 
 celery = Celery(__name__)
 celery.conf.broker_url = os.environ.get(
@@ -29,3 +30,8 @@ def scrape_task(user: TVTimeUser):
     input_args = {"user": user}
     spider_process.crawl(TVTimeSpider, **input_args)
     spider_process.start()
+    try:
+        TVTimeDataModel.get(user.username)
+    except NotFoundError:
+        raise Exception("User not found")
+

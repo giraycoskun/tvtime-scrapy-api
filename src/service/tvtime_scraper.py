@@ -1,14 +1,15 @@
 from loguru import logger
 from fastapi import Depends
 from typing import Annotated
+from celery.result import AsyncResult
 
 from src.repository.celery_repository import scrape_task, celery
-from src.repository.redis_repository import RedisClient
+from src.repository.redis_repository import RedisOMClient
 from src.repository.models import TVTimeUser
 
 class TVTimeScraperService:
 
-    def __init__(self, redis_client: Annotated[RedisClient, Depends()]):
+    def __init__(self, redis_client: Annotated[RedisOMClient, Depends()]):
         self.celery = celery
         self.redis = redis_client
 
@@ -19,7 +20,7 @@ class TVTimeScraperService:
 
     def get_status(self, task_id):
         logger.debug("Task id {task_id}", task_id=task_id)
-        result = result.AsyncResult(id=task_id, app=self.celery)
+        result = AsyncResult(id=task_id, app=self.celery)
         # https://docs.celeryq.dev/en/latest/userguide/tasks.html#built-in-states
         return {
             "id": result.id,

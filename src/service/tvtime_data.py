@@ -9,13 +9,16 @@ class TVTimeDataService:
         self.redis = redis_client
 
     def get_status(self, username):
-        return self.redis.exists(username)
-
+        status = {
+            "exists": self.redis.exists(username),
+            "ttl": self.redis.get_ttl(username),
+        }
+        return status
     def get_all_data(self, username):
         return self.redis.get_tvtime_data(username)
     
     def get_watch_next(self, username):
-        return self.redis.get_tvtime_towatch(username)
+        return self.redis.get_tvtime_watch_next(username)
     
     def get_not_watched_for_while(self, username):
         return self.redis.get_tvtime_not_watched_for_while(username)

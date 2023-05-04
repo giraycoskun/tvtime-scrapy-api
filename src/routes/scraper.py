@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 
-@router.post("/scrape", summary="Start Scrape Task")
+@router.post("/", summary="Start Scrape Task")
 def start_scrape(user: TVTimeUser, tvtime_scraper_service: Annotated[TVTimeScraperService, Depends()]) -> Response:
     task_id = tvtime_scraper_service.scrape(user)
     data = {
@@ -26,16 +26,16 @@ def start_scrape(user: TVTimeUser, tvtime_scraper_service: Annotated[TVTimeScrap
     }
     return JSONResponse(content=data, status_code=202)
 
-@router.get("/scrape", summary="Scrape Task Status")
+@router.get("/{task_id}", summary="Scrape Task Status")
 def scrape_status(task_id: str, tvtime_scraper_service: Annotated[TVTimeScraperService, Depends()]) -> Response:
     """_summary_
 
     Args:
-        task_id (str): _description_
-        tvtime_service (Annotated[TVTimeService, Depends): _description_
+        task_id (str): Celery Task ID
+        tvtime_scraper_service (Annotated[TVTimeScraperService, Depends): TVTimeScraperService 
 
     Returns:
-        Response: _description_
+        Response: status of the celery task
     """    
     data = tvtime_scraper_service.get_status(task_id)
     return JSONResponse(content=data, status_code=200)

@@ -19,7 +19,7 @@ app.include_router(tvtime.router)
 app.include_router(user.router)
 
 
-@app.get("/")
+@app.get("/", summary="Hello")
 async def root():
     return {"Hello": "World"}
 
@@ -30,3 +30,4 @@ def write_openapi_spec(app : FastAPI) -> None:
 
 # TODO: User route
 # TODO: Authentication Scheme
+# TODO: https://fastapi.tiangolo.com/tutorial/security/oauth2-jwt/

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from redis_om import EmbeddedJsonModel, Field, JsonModel
+from redis_om import Field, JsonModel
 from typing import Optional
 from os import environ
 from dotenv import load_dotenv

@@ -1,5 +1,6 @@
 import scrapy
 from scrapy.crawler import CrawlerProcess
+from scrapy.exceptions import CloseSpider
 import json
 from dotenv import load_dotenv
 from os import environ
@@ -19,6 +20,7 @@ class TVTimeSpider(scrapy.Spider):
     TO_WATCH_URL = "https://www.tvtime.com/en/to-watch"
     UPCOMING_URL = "https://www.tvtime.com/en/upcoming"
     TVTIME_PROFILE_URL = "https://www.tvtime.com/en/user/"
+    USER_NOTFOUND_FLAG = False
 
     def __init__(self, user: TVTimeUser, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,10 +38,15 @@ class TVTimeSpider(scrapy.Spider):
         )
 
     def logged_in(self, response):
+        logger.debug(f"Logged in {self.user.username}")
         script_content = response.selector.xpath(
             '/html/head/script[contains(text(), "tvst.user")]/text()').get()
-        user_id = int(
-            re.search(r'(?<= id:[ ]")[0-9]*', script_content).group(0))
+        user_id = re.search(r'(?<= id:[ ]")[0-9]*', script_content).group(0)
+        if user_id == '':
+            logger.error("User not found")
+            self.USER_NOTFOUND_FLAG = True
+            raise CloseSpider("User not found")
+        user_id = int(user_id)
         yield {'name': 'id', 'data': {'user_id': user_id}}
         yield response.follow(self.TO_WATCH_URL, self.parse_to_watch)
         yield response.follow(self.UPCOMING_URL, self.parse_upcoming)
@@ -139,8 +146,9 @@ class RedisWriterPipeline:
     def open_spider(self, spider):
         logger.debug(f"Opening spider {spider.name}")
         self.data = TVTimeDataModel(username=self.username)
-        self.data.expire(86400)
         self.data.save()
+        self.data.expire(86400)
+        
 
     def process_item(self, item, spider):
         logger.debug(f"Processing item {item}")
@@ -148,16 +156,17 @@ class RedisWriterPipeline:
         if name == 'id':
             self.data.user_id = item.get('data').get('user_id')
         elif name == 'to-watch':
-            self.data.to_watch = item.get('data')
+            self.data.watch_next = item.get('data')
         elif name == 'upcoming':
             self.data.upcoming = item.get('data')
         elif name == 'profile':
             self.data.profile = item.get('data')
-
         self.data.save()
 
     def close_spider(self, spider):
         logger.debug(f"Closing spider {spider.name}")
+        if spider.USER_NOTFOUND_FLAG:
+            self.data.expire(0)
         self.redis.close()
 
 
@@ -168,7 +177,7 @@ if __name__ == "__main__":
         }
     })
     user = TVTimeUser(
-        username=environ['TVTIME_USERNAME'], password=environ['TVTIME_PASSWORD'])
+        username="string", password="string")
     input_args = {"user": user}
     process.crawl(TVTimeSpider, **input_args)
     process.start()
