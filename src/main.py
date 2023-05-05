@@ -11,7 +11,7 @@ app = FastAPI(
     description="Unofficial TVTime API via Scrapy",
     version="0.1.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
 )
 
 app.include_router(scraper.router)
@@ -24,9 +24,10 @@ async def root():
     return {"Hello": "World"}
 
 
-def write_openapi_spec(app : FastAPI) -> None:
+def write_openapi_spec(app: FastAPI) -> None:
     with open("./docs/assets/openapi.json", "w") as f:
         dump(app.openapi(), f, indent=4)
+
 
 # TODO: User route
 # TODO: Authentication Scheme

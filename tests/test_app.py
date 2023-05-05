@@ -13,7 +13,6 @@ import src.repository.redis_repository
 @pytest.fixture(scope="function")
 def test_redis_mock():
     class RedisMock:
-
         def __init__(self, url="") -> None:
             pass
 
@@ -39,24 +38,18 @@ def test_redis_model_mock():
         profile: Optional[dict]
 
     class RedisModelMock:
-
         def get(self):
             data = {
                 "username": "test_user",
                 "user_id": "test_id",
-                "to_watch": {"Watch next": {
-                    "Game of Thrones": {
-                        "episode": "S02E03",
-                        "is_new": True
-                    },
-                    "Rick and Morty": {
-                        "episode": "S03E02",
-                        "is_new": False
+                "to_watch": {
+                    "Watch next": {
+                        "Game of Thrones": {"episode": "S02E03", "is_new": True},
+                        "Rick and Morty": {"episode": "S03E02", "is_new": False},
                     }
-                }
                 },
                 "upcoming": {},
-                "profile": {}
+                "profile": {},
             }
             return TVTimeDataModelMock(**data)
 
@@ -69,10 +62,13 @@ def test_redis_model_mock():
 
 @pytest.fixture(scope="function")
 def test_app(monkeypatch, test_redis_mock, test_redis_model_mock):
-    monkeypatch.setattr(redis, 'Redis', test_redis_mock)
-    monkeypatch.setattr(src.repository.redis_repository, 'get_redis_connection', test_redis_mock)
-    monkeypatch.setattr(src.repository.redis_repository,
-                        'TVTimeDataModel', test_redis_model_mock)
+    monkeypatch.setattr(redis, "Redis", test_redis_mock)
+    monkeypatch.setattr(
+        src.repository.redis_repository, "get_redis_connection", test_redis_mock
+    )
+    monkeypatch.setattr(
+        src.repository.redis_repository, "TVTimeDataModel", test_redis_model_mock
+    )
     client = TestClient(app)
     yield client  # The test runs here
     # Clean up code, if any
@@ -92,10 +88,7 @@ def test_api_spec():
 def test_get_status(test_app):
     response = test_app.get("/status", params={"username": "test_user"})
     assert response.status_code == 200
-    assert response.json() == {
-        "exists": True,
-        "ttl": 86364
-    }
+    assert response.json() == {"exists": True, "ttl": 86364}
 
 
 def test_get_all_data(test_app):
@@ -104,19 +97,14 @@ def test_get_all_data(test_app):
     assert response.json() == {
         "username": "test_user",
         "user_id": "test_id",
-        "to_watch": {"Watch next": {
-            "Game of Thrones": {
-                "episode": "S02E03",
-                "is_new": True
-            },
-            "Rick and Morty": {
-                "episode": "S03E02",
-                "is_new": False
+        "to_watch": {
+            "Watch next": {
+                "Game of Thrones": {"episode": "S02E03", "is_new": True},
+                "Rick and Morty": {"episode": "S03E02", "is_new": False},
             }
-        }
         },
         "upcoming": {},
-        "profile": {}
+        "profile": {},
     }
 
 
@@ -125,25 +113,18 @@ def test_get_watch_next(test_app):
     assert response.status_code == 200
     logging.debug(response.json())
     assert response.json() == {
-        "Game of Thrones": {
-            "episode": "S02E03",
-            "is_new": True
-        },
-        "Rick and Morty": {
-            "episode": "S03E02",
-            "is_new": False
-        }
+        "Game of Thrones": {"episode": "S02E03", "is_new": True},
+        "Rick and Morty": {"episode": "S03E02", "is_new": False},
     }
 
+
 def test_get_not_watched_for_while(test_app):
-    response = test_app.get("/not-watched-for-while",
-                            params={"username": "test_user"})
+    response = test_app.get("/not-watched-for-while", params={"username": "test_user"})
     assert response.status_code == 200
     assert response.json() == {}
 
 
 def test_get_not_started_yet(test_app):
-    response = test_app.get(
-        "/not-started-yet", params={"username": "test_user"})
+    response = test_app.get("/not-started-yet", params={"username": "test_user"})
     assert response.status_code == 200
     assert response.json() == {}

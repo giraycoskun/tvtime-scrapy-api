@@ -15,7 +15,6 @@ load_dotenv()
 
 
 class TVTimeSpider(scrapy.Spider):
-
     name = "tvtime"
     TO_WATCH_URL = "https://www.tvtime.com/en/to-watch"
     UPCOMING_URL = "https://www.tvtime.com/en/upcoming"
@@ -30,50 +29,54 @@ class TVTimeSpider(scrapy.Spider):
     def start_requests(self):
         logger.info(f"Starting Requests for {self.user.username}")
         yield scrapy.FormRequest(
-            url='https://www.tvtime.com/signin',
-            formdata={'username': self.user.username,
-                      'password': self.user.password,
-                      },
-            callback=self.logged_in
+            url="https://www.tvtime.com/signin",
+            formdata={
+                "username": self.user.username,
+                "password": self.user.password,
+            },
+            callback=self.logged_in,
         )
 
     def logged_in(self, response):
         logger.debug(f"Logged in {self.user.username}")
         script_content = response.selector.xpath(
-            '/html/head/script[contains(text(), "tvst.user")]/text()').get()
+            '/html/head/script[contains(text(), "tvst.user")]/text()'
+        ).get()
         user_id = re.search(r'(?<= id:[ ]")[0-9]*', script_content).group(0)
-        if user_id == '':
+        if user_id == "":
             logger.error("User not found")
             self.USER_NOTFOUND_FLAG = True
             raise CloseSpider("User not found")
         user_id = int(user_id)
-        yield {'name': 'id', 'data': {'user_id': user_id}}
+        yield {"name": "id", "data": {"user_id": user_id}}
         yield response.follow(self.TO_WATCH_URL, self.parse_to_watch)
         yield response.follow(self.UPCOMING_URL, self.parse_upcoming)
-        yield scrapy.Request(f"{self.TVTIME_PROFILE_URL}/{user_id}/profile", self.parse_profile)
+        yield scrapy.Request(
+            f"{self.TVTIME_PROFILE_URL}/{user_id}/profile", self.parse_profile
+        )
 
     def parse_to_watch(self, response):
-        result = {'name': 'to-watch', 'data': {}}
+        result = {"name": "to-watch", "data": {}}
         items = response.selector.xpath('//*[@id="to-watch"]/ul')
         titles = response.selector.xpath('//*[@id="to-watch"]/h1')
         for idx in range(len(items)):
-            title = titles[idx].xpath('./text()').get().strip()
-            result['data'][title] = {}
+            title = titles[idx].xpath("./text()").get().strip()
+            result["data"][title] = {}
             new_tags = items[idx].xpath('.//div[@class="new-label"]/text()').getall()
-            shows = items[idx].xpath('.//img/@alt').getall()
-            episodes = items[idx].xpath('.//div[@class="episode-details poster-details"]/h2/a/text()').getall()
+            shows = items[idx].xpath(".//img/@alt").getall()
+            episodes = (
+                items[idx]
+                .xpath('.//div[@class="episode-details poster-details"]/h2/a/text()')
+                .getall()
+            )
             for show, episode in zip(shows, episodes):
                 tag = False
                 if len(new_tags) > 0:
                     tag = True
                     new_tags.pop(0)
-                temp = {
-                    'episode': episode,
-                    'is_new': tag
-                        }
-                result['data'][title][show] = temp
-            
-             
+                temp = {"episode": episode, "is_new": tag}
+                result["data"][title][show] = temp
+
         # title_not_watched = items[0].xpath('.//img/@alt').getall()
         # title_not_started = items[1].xpath('.//img/@alt').getall()
         # result['data']['not-watched'] = title_not_watched
@@ -92,36 +95,47 @@ class TVTimeSpider(scrapy.Spider):
         return result
 
     def parse_upcoming(self, response):
-        result = {'name': 'upcoming', 'data': {}}
+        result = {"name": "upcoming", "data": {}}
         items = response.selector.xpath('//*[@id="upcoming-episodes"]/ul/li')
         for item in items:
             title = item.xpath(
-                './/div[@class="episode-details poster-details"]/a/text()').get()
+                './/div[@class="episode-details poster-details"]/a/text()'
+            ).get()
             episode = item.xpath(
-                '//*[@id="upcoming-episodes"]/ul/li/div[@class="episode-details poster-details"]/h2/a/text()').get()
-            day = item.xpath(
-                './/div[@class="overlay"]//ul/li/div/text()').get()
+                '//*[@id="upcoming-episodes"]/ul/li/div[@class="episode-details poster-details"]/h2/a/text()'
+            ).get()
+            day = item.xpath('.//div[@class="overlay"]//ul/li/div/text()').get()
             if title:
-                result['data'][title] = {episode: day}
+                result["data"][title] = {episode: day}
         return result
 
     def parse_profile(self, response):
-        result = {'name': 'profile', 'data': {}}
+        result = {"name": "profile", "data": {}}
         script_content = response.selector.xpath(
-            '//div[@class="main-block-container"]/script/text()').get()
+            '//div[@class="main-block-container"]/script/text()'
+        ).get()
         data_content = re.search(
-            r'(tvst.data = )(.*)(;)', script_content, re.DOTALL).group(2)
-        data_content = data_content.replace('\&quot;', '"').replace('shows', '"shows"', 1).replace(
-            'profile', '"profile"', 1).replace("'[", "[").replace("]'", "]").replace("'{", "{").replace("}'", "}").replace("\&", "")
-        with open('data.json', 'w') as f:
+            r"(tvst.data = )(.*)(;)", script_content, re.DOTALL
+        ).group(2)
+        data_content = (
+            data_content.replace("\&quot;", '"')
+            .replace("shows", '"shows"', 1)
+            .replace("profile", '"profile"', 1)
+            .replace("'[", "[")
+            .replace("]'", "]")
+            .replace("'{", "{")
+            .replace("}'", "}")
+            .replace("\&", "")
+        )
+        with open("data.json", "w") as f:
             f.write(data_content)
-        result['data'] = json.loads(data_content)
+        result["data"] = json.loads(data_content)
         return result
 
 
 class JsonWriterPipeline:
     def open_spider(self, spider):
-        self.file = open('items.json', 'w')
+        self.file = open("items.json", "w")
 
     def close_spider(self, spider):
         self.file.close()
@@ -133,7 +147,6 @@ class JsonWriterPipeline:
 
 
 class RedisWriterPipeline:
-
     def __init__(self, user) -> None:
         self.redis = get_redis_connection(url=REDIS_URL)
         self.username = user.username
@@ -148,19 +161,18 @@ class RedisWriterPipeline:
         self.data = TVTimeDataModel(username=self.username)
         self.data.save()
         self.data.expire(86400)
-        
 
     def process_item(self, item, spider):
         logger.debug(f"Processing item {item}")
-        name = item.get('name')
-        if name == 'id':
-            self.data.user_id = item.get('data').get('user_id')
-        elif name == 'to-watch':
-            self.data.watch_next = item.get('data')
-        elif name == 'upcoming':
-            self.data.upcoming = item.get('data')
-        elif name == 'profile':
-            self.data.profile = item.get('data')
+        name = item.get("name")
+        if name == "id":
+            self.data.user_id = item.get("data").get("user_id")
+        elif name == "to-watch":
+            self.data.watch_next = item.get("data")
+        elif name == "upcoming":
+            self.data.upcoming = item.get("data")
+        elif name == "profile":
+            self.data.profile = item.get("data")
         self.data.save()
 
     def close_spider(self, spider):
@@ -171,13 +183,14 @@ class RedisWriterPipeline:
 
 
 if __name__ == "__main__":
-    process = CrawlerProcess(settings={
-        "ITEM_PIPELINES": {
-            "src.repository.spider.RedisWriterPipeline": 1,
+    process = CrawlerProcess(
+        settings={
+            "ITEM_PIPELINES": {
+                "src.repository.spider.RedisWriterPipeline": 1,
+            }
         }
-    })
-    user = TVTimeUser(
-        username="string", password="string")
+    )
+    user = TVTimeUser(username="string", password="string")
     input_args = {"user": user}
     process.crawl(TVTimeSpider, **input_args)
     process.start()
