@@ -13,6 +13,8 @@ TVTIME_URL = "https://www.tvtime.com/"
 TVTIME_SIGNIN_URL = "https://www.tvtime.com/signin"
 TVTIME_SIGNOUT_URL = "https://www.tvtime.com/signout"
 TVTIME_TOWATCH_URL = "https://www.tvtime.com/en/to-watch"
+TVTIME_UPCOMING_URL = "https://www.tvtime.com/en/upcoming"
+TVTIME_PROFILE_URL = "https://www.tvtime.com/en/user/"
 
-TVTIME_USERNAME = os.getenv("TVTIME_USERNAME")
-TVTIME_PASSWORD = os.getenv("TVTIME_PASSWORD")
+TVTIME_TEST_USERNAME = os.getenv("TVTIME_TEST_USERNAME")
+TVTIME_TEST_PASSWORD = os.getenv("TVTIME_TEST_PASSWORD")

@@ -3,22 +3,18 @@ from scrapy.crawler import CrawlerProcess
 from scrapy.exceptions import CloseSpider
 import json
 from dotenv import load_dotenv
-from os import environ
 import re
 from loguru import logger
-from redis_om import get_redis_connection, Migrator
+from redis_om import get_redis_connection
 
 from src.repository.models import TVTimeDataModel, TVTimeUser
-from src.config import REDIS_URL
+from src.config import REDIS_URL, TVTIME_TOWATCH_URL, TVTIME_PROFILE_URL, TVTIME_UPCOMING_URL
 
 load_dotenv()
 
 
 class TVTimeSpider(scrapy.Spider):
     name = "tvtime"
-    TO_WATCH_URL = "https://www.tvtime.com/en/to-watch"
-    UPCOMING_URL = "https://www.tvtime.com/en/upcoming"
-    TVTIME_PROFILE_URL = "https://www.tvtime.com/en/user/"
     USER_NOTFOUND_FLAG = False
 
     def __init__(self, user: TVTimeUser, *args, **kwargs):
@@ -49,10 +45,10 @@ class TVTimeSpider(scrapy.Spider):
             raise CloseSpider("User not found")
         user_id = int(user_id)
         yield {"name": "id", "data": {"user_id": user_id}}
-        yield response.follow(self.TO_WATCH_URL, self.parse_to_watch)
-        yield response.follow(self.UPCOMING_URL, self.parse_upcoming)
+        yield response.follow(TVTIME_TOWATCH_URL, self.parse_to_watch)
+        yield response.follow(TVTIME_UPCOMING_URL, self.parse_upcoming)
         yield scrapy.Request(
-            f"{self.TVTIME_PROFILE_URL}/{user_id}/profile", self.parse_profile
+            f"{TVTIME_PROFILE_URL}/{user_id}/profile", self.parse_profile
         )
 
     def parse_to_watch(self, response):

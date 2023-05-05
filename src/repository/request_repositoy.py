@@ -3,7 +3,7 @@ from loguru import logger
 
 from src.repository.models import TVTimeUser
 from src.config import TVTIME_URL, TVTIME_SIGNIN_URL, TVTIME_SIGNOUT_URL, TVTIME_TOWATCH_URL, TVTIME_HOST, USER_AGENT
-from src.config import TVTIME_USERNAME, TVTIME_PASSWORD
+from src.config import TVTIME_TEST_USERNAME, TVTIME_TEST_PASSWORD
 
 
 class TVTimeClient:
@@ -90,7 +90,7 @@ class TVTimeClient:
 
 
 if __name__ == "__main__":
-    user = TVTimeUser(username=TVTIME_USERNAME, password=TVTIME_PASSWORD)
+    user = TVTimeUser(username=TVTIME_TEST_USERNAME, password=TVTIME_TEST_PASSWORD)
     tv_time_client = TVTimeClient(user)
     tv_time_client.login()
     tv_time_client.get_show_ratings(394290)
