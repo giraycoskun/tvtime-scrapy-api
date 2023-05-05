@@ -3,6 +3,7 @@
 # TVTime Scrapy API
 
 ![Python Version](https://img.shields.io/badge/python-3.10-blue.svg)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ![Work in Progress](https://img.shields.io/badge/Work-In%20Progress-red)
 [![Coverage Status](https://coveralls.io/repos/github/giraycoskun/tvtime-scrapy-api/badge.svg)](https://coveralls.io/github/giraycoskun/tvtime-scrapy-api)
 
