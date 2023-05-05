@@ -28,6 +28,8 @@ mkdocs-swagger-ui-tag = "^0.6.1"
 
 [tool.poetry.group.dev.dependencies]
 autopep8 = "^2.0.2"
+black = "^23.3.0"
+pre-commit = "^3.3.1"
 
 
 [tool.poetry.group.test.dependencies]
