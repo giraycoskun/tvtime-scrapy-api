@@ -105,17 +105,6 @@
                 ],
                 "summary": "Get Data Status",
                 "operationId": "get_status_status_get",
-                "parameters": [
-                    {
-                        "required": true,
-                        "schema": {
-                            "title": "Username",
-                            "type": "string"
-                        },
-                        "name": "username",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -127,18 +116,13 @@
                     },
                     "404": {
                         "description": "Not found/Redis Connection Error"
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/all-data": {
@@ -616,12 +600,12 @@
                     "tvtime"
                 ],
                 "summary": "Mark Season UnWatched",
-                "operationId": "mark_season_watched_season_delete",
+                "operationId": "mark_season_unwatched_season_delete",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_mark_season_watched_season_delete"
+                                "$ref": "#/components/schemas/Body_mark_season_unwatched_season_delete"
                             }
                         }
                     },
@@ -652,6 +636,45 @@
                 }
             }
         },
+        "/token": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Login",
+                "operationId": "login_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "tags": [
@@ -659,12 +682,32 @@
                 ],
                 "summary": "Get Data Status",
                 "operationId": "get_user_user_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserOut"
+                            }
+                        }
+                    },
+                    "required": true
+                },
                 "responses": {
                     "200": {
                         "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
                             }
                         }
                     }
@@ -674,6 +717,7 @@
         "/": {
             "get": {
                 "summary": "Hello",
+                "description": "Root route\n\nReturns:\n    JSONResponse: successful response",
                 "operationId": "root__get",
                 "responses": {
                     "200": {
@@ -703,6 +747,42 @@
                     },
                     "show": {
                         "$ref": "#/components/schemas/Show"
+                    }
+                }
+            },
+            "Body_login_token_post": {
+                "title": "Body_login_token_post",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "title": "Grant Type",
+                        "pattern": "password",
+                        "type": "string"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    },
+                    "scope": {
+                        "title": "Scope",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "title": "Client Secret",
+                        "type": "string"
                     }
                 }
             },
@@ -738,8 +818,8 @@
                     }
                 }
             },
-            "Body_mark_season_watched_season_delete": {
-                "title": "Body_mark_season_watched_season_delete",
+            "Body_mark_season_unwatched_season_delete": {
+                "title": "Body_mark_season_unwatched_season_delete",
                 "required": [
                     "user",
                     "season"
@@ -876,6 +956,34 @@
                     }
                 }
             },
+            "UserOut": {
+                "title": "UserOut",
+                "required": [
+                    "user_id",
+                    "username",
+                    "tv_time_username"
+                ],
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "tv_time_username": {
+                        "title": "Tv Time Username",
+                        "type": "string"
+                    },
+                    "disabled": {
+                        "title": "Disabled",
+                        "type": "boolean"
+                    }
+                }
+            },
             "ValidationError": {
                 "title": "ValidationError",
                 "required": [
@@ -906,6 +1014,17 @@
                     "type": {
                         "title": "Error Type",
                         "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
                     }
                 }
             }
