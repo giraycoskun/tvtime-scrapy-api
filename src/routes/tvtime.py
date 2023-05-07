@@ -1,10 +1,20 @@
+"""TvTime Routes
+
+Raises:
+    HTTPException: Redis Connection Error
+
+Returns:
+    APIRouter: Router for tvtime routes
+"""
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
-from typing import Annotated
 from loguru import logger
-from redis.exceptions import ConnectionError
-from src.repository.models import Show, Season, Episode, TVTimeUser
+from redis.exceptions import ConnectionError as RedisConnectionError
 
+from src.models.api import Episode, Season, Show, TVTimeUser, UserOut
+from src.service.security import get_current_active_user
 from src.service.tvtime_data import TVTimeDataService
 
 # TODO: Update to async routes
@@ -21,13 +31,14 @@ router = APIRouter(
 
 @router.get("/status", summary="Get Data Status")
 def get_status(
-    username: str, tvtime_data_service: Annotated[TVTimeDataService, Depends()]
-):
+    current_user: Annotated[UserOut, Depends(get_current_active_user)],
+    tvtime_data_service: Annotated[TVTimeDataService, Depends()],
+) -> JSONResponse:
     try:
-        response = tvtime_data_service.get_status(username)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+        response = tvtime_data_service.get_status(current_user.username)
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=response, status_code=200)
 
 
@@ -37,9 +48,9 @@ def get_all_data(
 ):
     try:
         data = tvtime_data_service.get_all_data(username)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=data.dict(), status_code=200)
 
 
@@ -49,9 +60,9 @@ def get_watch_next(
 ):
     try:
         response = tvtime_data_service.get_watch_next(username)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=response, status_code=200)
 
 
@@ -61,9 +72,9 @@ def get_not_watched_for_while(
 ):
     try:
         response = tvtime_data_service.get_not_watched_for_while(username)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=response, status_code=200)
 
 
@@ -73,9 +84,9 @@ def get_not_started_yet(
 ):
     try:
         response = tvtime_data_service.get_not_started_yet(username)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=response, status_code=200)
 
 
@@ -138,7 +149,7 @@ def mark_season_watched(
 
 
 @router.delete("/season", summary="Mark Season UnWatched")
-def mark_season_watched(
+def mark_season_unwatched(
     user: TVTimeUser,
     season: Season,
     tvtime_data_service: Annotated[TVTimeDataService, Depends()],

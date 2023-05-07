@@ -7,8 +7,14 @@ import re
 from loguru import logger
 from redis_om import get_redis_connection
 
-from src.repository.models import TVTimeDataModel, TVTimeUser
-from src.config import REDIS_URL, TVTIME_TOWATCH_URL, TVTIME_PROFILE_URL, TVTIME_UPCOMING_URL
+from src.models.data import TVTimeDataModel
+from src.models.api import TVTimeUser
+from src.config import (
+    REDIS_URL,
+    TVTIME_TOWATCH_URL,
+    TVTIME_PROFILE_URL,
+    TVTIME_UPCOMING_URL,
+)
 
 load_dotenv()
 

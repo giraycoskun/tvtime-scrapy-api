@@ -1,11 +1,17 @@
-from loguru import logger
-from fastapi import Depends
-from typing import Annotated
-from celery.result import AsyncResult
+"""TVTime Scraper Service
 
-from src.repository.celery_repository import scrape_task, celery
+Returns:
+    TVTimeScraperService: Service to handle scraper tasks
+"""
+from typing import Annotated
+
+from celery.result import AsyncResult
+from fastapi import Depends
+from loguru import logger
+
+from src.models.api import TVTimeUser
+from src.repository.celery_repository import celery, scrape_task
 from src.repository.redis_repository import RedisOMClient
-from src.repository.models import TVTimeUser
 
 
 class TVTimeScraperService:
@@ -14,7 +20,7 @@ class TVTimeScraperService:
         self.redis = redis_client
 
     def scrape(self, user: TVTimeUser) -> str:
-        logger.debug(f"Scraping Service Started")
+        logger.debug("Scraping Service Started")
         task = scrape_task.delay(user)
         return task.id
 

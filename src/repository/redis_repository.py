@@ -1,8 +1,7 @@
-from loguru import logger
-from redis_om import get_redis_connection, Migrator, MigrationError, NotFoundError
+from redis_om import get_redis_connection
 
 from src.config import REDIS_URL
-from src.repository.models import TVTimeDataModel
+from src.models.data import TVTimeDataModel
 
 
 class RedisOMClient:

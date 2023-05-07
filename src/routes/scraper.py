@@ -1,11 +1,21 @@
-from fastapi import APIRouter, HTTPException, Response, Depends
-from fastapi.responses import JSONResponse
-from loguru import logger
-from typing import Annotated
-from kombu.exceptions import OperationalError
-from redis.exceptions import ConnectionError
+"""_summary_
 
-from src.repository.models import TVTimeUser
+Raises:
+    HTTPException: Redis Connection Error
+    HTTPException: Celery Operational Error
+
+Returns:
+    APIRouter: Router to scrape tvtime
+"""
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi.responses import JSONResponse
+from kombu.exceptions import OperationalError
+from loguru import logger
+from redis.exceptions import ConnectionError as RedisConnectionError
+
+from src.models.api import TVTimeUser
 from src.service.tvtime_scraper import TVTimeScraperService
 
 router = APIRouter(
@@ -26,9 +36,9 @@ def start_scrape(
     try:
         task_id = tvtime_scraper_service.scrape(user)
         data = {"status": "success", "task_id": task_id}
-    except OperationalError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Celery Operational Error")
+    except OperationalError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Celery Operational Error") from exc
     return JSONResponse(content=data, status_code=202)
 
 
@@ -47,7 +57,7 @@ def scrape_status(
     """
     try:
         data = tvtime_scraper_service.get_status(task_id)
-    except ConnectionError as e:
-        logger.error(e)
-        raise HTTPException(status_code=404, detail="Redis Connection Error")
+    except RedisConnectionError as exc:
+        logger.error(exc)
+        raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
     return JSONResponse(content=data, status_code=200)

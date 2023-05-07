@@ -1,5 +1,11 @@
-from fastapi import Depends
+"""TVTime Data Service
+
+Returns:
+    TVTimeDataService: Service to handle tvtime data
+"""
 from typing import Annotated
+
+from fastapi import Depends
 
 from src.repository.redis_repository import RedisOMClient
 

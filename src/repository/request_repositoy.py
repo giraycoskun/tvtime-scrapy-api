@@ -1,27 +1,29 @@
 from requests import Session
 from loguru import logger
 
-from src.repository.models import TVTimeUser
-from src.config import TVTIME_URL, TVTIME_SIGNIN_URL, TVTIME_SIGNOUT_URL, TVTIME_TOWATCH_URL, TVTIME_HOST, USER_AGENT
-from src.config import TVTIME_TEST_USERNAME, TVTIME_TEST_PASSWORD
+from src.models.api import TVTimeUser
+from src.config import (
+    TVTIME_URL,
+    TVTIME_SIGNIN_URL,
+    TVTIME_SIGNOUT_URL,
+    TVTIME_TOWATCH_URL,
+    TVTIME_HOST,
+    USER_AGENT,
+)
 
 
 class TVTimeClient:
-
     def __init__(self, user: TVTimeUser) -> None:
         self.user = user
         self.session = Session()
-        headers = {
-            "User-Agent": USER_AGENT,
-            "Host": TVTIME_HOST
-        }
+        headers = {"User-Agent": USER_AGENT, "Host": TVTIME_HOST}
         self.session.headers.update(headers)
 
     def login(self):
         payload = {
-            'username': self.user.username,
-            'password': self.user.password,
-            'redirect_path': TVTIME_TOWATCH_URL
+            "username": self.user.username,
+            "password": self.user.password,
+            "redirect_path": TVTIME_TOWATCH_URL,
         }
         self.session.post(TVTIME_SIGNIN_URL, data=payload)
 
@@ -34,7 +36,7 @@ class TVTimeClient:
 
     def mark_show_followed(self, show_id, follow=True):
         url = f"{TVTIME_URL}followed_shows"
-        data = {'show_id': show_id}
+        data = {"show_id": show_id}
         if follow:
             response = self.session.put(url=url, data=data)
         else:
@@ -45,33 +47,27 @@ class TVTimeClient:
 
     def mark_season_watched(self, show_id, season, watched=True):
         url = f"{TVTIME_URL}watched_season"
-        data = {'show_id': show_id, 'season': season}
+        data = {"show_id": show_id, "season": season}
         if watched:
             response = self.session.put(url=url, data=data)
         else:
             response = self.session.delete(url=url, data=data)
-        logger.debug("Watched Season: {response}",
-                     response=response.status_code)
+        logger.debug("Watched Season: {response}", response=response.status_code)
         logger.debug("Watched Season: {response}", response=response.text)
 
     def mark_episode_watched(self, episode_id, watched=True):
         url = f"{TVTIME_URL}watched_episodes"
-        data = {'episode_id': episode_id}
+        data = {"episode_id": episode_id}
         if watched:
             response = self.session.put(url=url, data=data)
         else:
             response = self.session.delete(url=url, data=data)
-        logger.debug("Watched Episode: {response}",
-                     response=response.status_code)
+        logger.debug("Watched Episode: {response}", response=response.status_code)
         logger.debug("Watched Episode: {response}", response=response.text)
 
     def mark_show_until_watched(self, season, episode, show_id):
         url = f"{TVTIME_URL}show_watch_until"
-        data = {
-            'season': season,
-            'episode': episode,
-            'show_id': show_id
-        }
+        data = {"season": season, "episode": episode, "show_id": show_id}
         response = self.session.put(url=url, data=data)
         logger.debug("Watched Until: {response}", response=response.status_code)
         logger.debug("Watched Until: {response}", response=response.text)
@@ -90,10 +86,11 @@ class TVTimeClient:
 
 
 if __name__ == "__main__":
-    user = TVTimeUser(username=TVTIME_TEST_USERNAME, password=TVTIME_TEST_PASSWORD)
-    tv_time_client = TVTimeClient(user)
-    tv_time_client.login()
-    tv_time_client.get_show_ratings(394290)
+    pass
+    # user = TVTimeUser(username=TVTIME_TEST_USERNAME, password=TVTIME_TEST_PASSWORD)
+    # tv_time_client = TVTimeClient(user)
+    # tv_time_client.login()
+    # tv_time_client.get_show_ratings(394290)
     # tv_time_client.mark_episode_watched(8112670, watched=False)
     # tv_time_client.show_seasons(394290)
-    tv_time_client.logout()
+    # tv_time_client.logout()
