@@ -1,0 +1,1033 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "TVTime Scrapy API",
+        "description": "Unofficial TVTime API via Scrapy",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/scraper/": {
+            "post": {
+                "tags": [
+                    "scraper"
+                ],
+                "summary": "Start Scrape Task",
+                "operationId": "start_scrape_scraper__post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TVTimeUser"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Scrape Task Accepted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/scraper/{task_id}": {
+            "get": {
+                "tags": [
+                    "scraper"
+                ],
+                "summary": "Scrape Task Status",
+                "description": "_summary_\n\nArgs:\n    task_id (str): Celery Task ID\n    tvtime_scraper_service (Annotated[TVTimeScraperService, Depends): TVTimeScraperService\n\nReturns:\n    Response: status of the celery task",
+                "operationId": "scrape_status_scraper__task_id__get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Task Id",
+                            "type": "string"
+                        },
+                        "name": "task_id",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "204": {
+                        "description": "Scrape Task Accepted"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/status": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Data Status",
+                "operationId": "get_status_status_get",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/all-data": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get All Data",
+                "operationId": "get_all_data_all_data_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/watch-next": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Watch Next List",
+                "operationId": "get_watch_next_watch_next_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/not-watched-for-while": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Not Watched For While List",
+                "operationId": "get_not_watched_for_while_not_watched_for_while_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/not-started-yet": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Not Started Yet List",
+                "operationId": "get_not_started_yet_not_started_yet_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/show": {
+            "get": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Get Show",
+                "operationId": "get_show_show_get",
+                "parameters": [
+                    {
+                        "required": true,
+                        "schema": {
+                            "title": "Username",
+                            "type": "string"
+                        },
+                        "name": "username",
+                        "in": "query"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Show"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Follow a show",
+                "operationId": "follow_show_show_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_follow_show_show_put"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Unfollow a show",
+                "operationId": "unfollow_show_show_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_unfollow_show_show_delete"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/show/until": {
+            "put": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Mark show as watched until a date",
+                "operationId": "mark_show_watched_until_show_until_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_mark_show_watched_until_show_until_put"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/episode": {
+            "put": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Mark Episode Watched",
+                "operationId": "mark_episode_watched_episode_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_mark_episode_watched_episode_put"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Mark Episode UnWatched",
+                "operationId": "mark_episode_unwatched_episode_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_mark_episode_unwatched_episode_delete"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/season": {
+            "put": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Mark Season Watched",
+                "operationId": "mark_season_watched_season_put",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_mark_season_watched_season_put"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tvtime"
+                ],
+                "summary": "Mark Season UnWatched",
+                "operationId": "mark_season_unwatched_season_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_mark_season_unwatched_season_delete"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found/Redis Connection Error"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Login",
+                "operationId": "login_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "get": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get Data Status",
+                "operationId": "get_user_user_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserOut"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "summary": "Hello",
+                "description": "Root route\n\nReturns:\n    JSONResponse: successful response",
+                "operationId": "root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_follow_show_show_put": {
+                "title": "Body_follow_show_show_put",
+                "required": [
+                    "user",
+                    "show"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "show": {
+                        "$ref": "#/components/schemas/Show"
+                    }
+                }
+            },
+            "Body_login_token_post": {
+                "title": "Body_login_token_post",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "grant_type": {
+                        "title": "Grant Type",
+                        "pattern": "password",
+                        "type": "string"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    },
+                    "scope": {
+                        "title": "Scope",
+                        "type": "string",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "title": "Client Id",
+                        "type": "string"
+                    },
+                    "client_secret": {
+                        "title": "Client Secret",
+                        "type": "string"
+                    }
+                }
+            },
+            "Body_mark_episode_unwatched_episode_delete": {
+                "title": "Body_mark_episode_unwatched_episode_delete",
+                "required": [
+                    "user",
+                    "episode"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "episode": {
+                        "$ref": "#/components/schemas/Episode"
+                    }
+                }
+            },
+            "Body_mark_episode_watched_episode_put": {
+                "title": "Body_mark_episode_watched_episode_put",
+                "required": [
+                    "user",
+                    "episode"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "episode": {
+                        "$ref": "#/components/schemas/Episode"
+                    }
+                }
+            },
+            "Body_mark_season_unwatched_season_delete": {
+                "title": "Body_mark_season_unwatched_season_delete",
+                "required": [
+                    "user",
+                    "season"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "season": {
+                        "$ref": "#/components/schemas/Season"
+                    }
+                }
+            },
+            "Body_mark_season_watched_season_put": {
+                "title": "Body_mark_season_watched_season_put",
+                "required": [
+                    "user",
+                    "season"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "season": {
+                        "$ref": "#/components/schemas/Season"
+                    }
+                }
+            },
+            "Body_mark_show_watched_until_show_until_put": {
+                "title": "Body_mark_show_watched_until_show_until_put",
+                "required": [
+                    "user",
+                    "show"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "show": {
+                        "$ref": "#/components/schemas/Show"
+                    }
+                }
+            },
+            "Body_unfollow_show_show_delete": {
+                "title": "Body_unfollow_show_show_delete",
+                "required": [
+                    "user",
+                    "show"
+                ],
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/TVTimeUser"
+                    },
+                    "show": {
+                        "$ref": "#/components/schemas/Show"
+                    }
+                }
+            },
+            "Episode": {
+                "title": "Episode",
+                "required": [
+                    "episode_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "episode_id": {
+                        "title": "Episode Id",
+                        "type": "integer"
+                    }
+                }
+            },
+            "HTTPValidationError": {
+                "title": "HTTPValidationError",
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "title": "Detail",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        }
+                    }
+                }
+            },
+            "Season": {
+                "title": "Season",
+                "required": [
+                    "season",
+                    "show"
+                ],
+                "type": "object",
+                "properties": {
+                    "season": {
+                        "title": "Season",
+                        "type": "integer"
+                    },
+                    "show": {
+                        "$ref": "#/components/schemas/Show"
+                    }
+                }
+            },
+            "Show": {
+                "title": "Show",
+                "required": [
+                    "show_id"
+                ],
+                "type": "object",
+                "properties": {
+                    "show_id": {
+                        "title": "Show Id",
+                        "type": "integer"
+                    }
+                }
+            },
+            "TVTimeUser": {
+                "title": "TVTimeUser",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "password": {
+                        "title": "Password",
+                        "type": "string"
+                    }
+                }
+            },
+            "UserOut": {
+                "title": "UserOut",
+                "required": [
+                    "user_id",
+                    "username",
+                    "tv_time_username"
+                ],
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "title": "User Id",
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "username": {
+                        "title": "Username",
+                        "type": "string"
+                    },
+                    "tv_time_username": {
+                        "title": "Tv Time Username",
+                        "type": "string"
+                    },
+                    "disabled": {
+                        "title": "Disabled",
+                        "type": "boolean"
+                    }
+                }
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "type": "object",
+                "properties": {
+                    "loc": {
+                        "title": "Location",
+                        "type": "array",
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        }
+                    },
+                    "msg": {
+                        "title": "Message",
+                        "type": "string"
+                    },
+                    "type": {
+                        "title": "Error Type",
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}
