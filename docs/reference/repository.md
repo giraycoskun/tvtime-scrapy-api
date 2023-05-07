@@ -2,7 +2,9 @@
 
 ## Models
 
-::: repository.models
+::: models.api
+
+::: models.data
 
 ## Redis
 

@@ -1,3 +1,3 @@
 # Spider
 
-::: repository.spider
+::: core.spider
