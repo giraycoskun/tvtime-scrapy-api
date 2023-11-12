@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from requests import Session
 from loguru import logger
 
@@ -25,7 +26,7 @@ class TVTimeClient:
             "password": self.user.password,
             "redirect_path": TVTIME_TOWATCH_URL,
         }
-        self.session.post(TVTIME_SIGNIN_URL, data=payload)
+        return self.session.post(TVTIME_SIGNIN_URL, data=payload)
 
     def show_seasons(self, show_id):
         url = f"{TVTIME_URL}show_seasons?show_id={show_id}"
@@ -85,12 +86,27 @@ class TVTimeClient:
         self.session.close()
 
 
-if __name__ == "__main__":
-    pass
-    # user = TVTimeUser(username=TVTIME_TEST_USERNAME, password=TVTIME_TEST_PASSWORD)
-    # tv_time_client = TVTimeClient(user)
-    # tv_time_client.login()
-    # tv_time_client.get_show_ratings(394290)
-    # tv_time_client.mark_episode_watched(8112670, watched=False)
-    # tv_time_client.show_seasons(394290)
-    # tv_time_client.logout()
+def get_tvtime_client(user: TVTimeUser):
+    tv_time_client = TVTimeClient(user)
+    response = tv_time_client.login()
+    if response.status_code == 200:
+        if "You did not give the correct password for this username" in response.text:
+            tv_time_client.logout()
+            raise HTTPException(status_code=401, detail="TVTIME Login Error")
+    else:
+        tv_time_client.logout()
+        raise HTTPException(status_code=401, detail="TVTIME Login Error")
+    try:
+        yield tv_time_client
+    finally:
+        tv_time_client.logout()
+
+
+# if __name__ == "__main__":
+# user = TVTimeUser(username=TVTIME_TEST_USERNAME, password=TVTIME_TEST_PASSWORD)
+# tv_time_client = TVTimeClient(user)
+# tv_time_client.login()
+# tv_time_client.get_show_ratings(394290)
+# tv_time_client.mark_episode_watched(8112670, watched=False)
+# tv_time_client.show_seasons(394290)
+# tv_time_client.logout()

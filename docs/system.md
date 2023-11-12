@@ -17,3 +17,7 @@
 ## PostgreSQL
 
 - <https://www.postgresql.org/>
+
+## Helped A Lot
+
+- <https://github.com/tiangolo/full-stack-fastapi-postgresql>

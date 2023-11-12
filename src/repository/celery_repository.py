@@ -27,7 +27,7 @@ def scrape_task(user: TVTimeUser):
     spider_process = CrawlerProcess(
         settings={
             "ITEM_PIPELINES": {
-                "src.repository.spider.RedisWriterPipeline": 1,
+                "src.core.spider.RedisWriterPipeline": 1,
             }
         }
     )

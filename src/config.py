@@ -1,3 +1,11 @@
+"""Configure Project
+
+    ENVIRONMENT: development, production
+    REDIS
+    POSTGRES
+    TVTIME
+    JWT
+"""
 import os
 from base64 import b64encode
 from secrets import token_bytes
@@ -8,8 +16,15 @@ load_dotenv()
 
 ENVIRONMENT = os.getenv("ENVIRONMENT")
 
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
+TVTIME_TEST_USERNAME = os.getenv("TVTIME_TEST_USERNAME")
+TVTIME_TEST_PASSWORD = os.getenv("TVTIME_TEST_PASSWORD")
+
 REDIS_URL = os.getenv("REDIS_URL")
 REDIS_CACHE_URL = os.getenv("REDIS_CACHE_URL")
+
+SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 \
     (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36"

@@ -129,8 +129,8 @@ class TVTimeSpider(scrapy.Spider):
             .replace("}'", "}")
             .replace("\&", "")
         )
-        with open("data.json", "w") as f:
-            f.write(data_content)
+        # with open("data.json", "w") as f:
+        #     f.write(data_content)
         result["data"] = json.loads(data_content)
         return result
 

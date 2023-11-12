@@ -1,4 +1,4 @@
-"""_summary_
+"""Scraper Router
 
 Raises:
     HTTPException: Redis Connection Error
@@ -15,14 +15,15 @@ from kombu.exceptions import OperationalError
 from loguru import logger
 from redis.exceptions import ConnectionError as RedisConnectionError
 
-from src.models.api import TVTimeUser
 from src.service.tvtime_scraper import TVTimeScraperService
+from src.models.exceptions import TVTimeLoginException
 
 router = APIRouter(
     prefix="/scraper",
     tags=["scraper"],
     responses={
         200: {"description": "Success"},
+        202: {"description": "Scrape Task Accepted"},
         204: {"description": "Scrape Task Accepted"},
         404: {"description": "Not found"},
     },
@@ -31,22 +32,36 @@ router = APIRouter(
 
 @router.post("/", summary="Start Scrape Task")
 def start_scrape(
-    user: TVTimeUser, tvtime_scraper_service: Annotated[TVTimeScraperService, Depends()]
+    tvtime_scraper_service: Annotated[TVTimeScraperService, Depends()],
 ) -> Response:
+    """Start scrape task
+
+    Args:
+        user (TVTimeUser): _description_
+        tvtime_scraper_service (Annotated[TVTimeScraperService, Depends): dependency scraper service
+
+    Raises:
+        HTTPException: 404 - Celery Operational Error
+
+    Returns:
+        Response: 202 - Scrape Task Accepted
+    """
     try:
-        task_id = tvtime_scraper_service.scrape(user)
+        task_id = tvtime_scraper_service.scrape()
         data = {"status": "success", "task_id": task_id}
     except OperationalError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Celery Operational Error") from exc
+    except TVTimeLoginException as exc:
+        raise HTTPException(status_code=404, detail=exc.message) from exc
     return JSONResponse(content=data, status_code=202)
 
 
 @router.get("/{task_id}", summary="Scrape Task Status")
-def scrape_status(
-    task_id: str, tvtime_scraper_service: Annotated[TVTimeScraperService, Depends()]
+def get_scrape_status(
+    task_id: str
 ) -> Response:
-    """_summary_
+    """Get scrape task status
 
     Args:
         task_id (str): Celery Task ID
@@ -56,7 +71,7 @@ def scrape_status(
         Response: status of the celery task
     """
     try:
-        data = tvtime_scraper_service.get_status(task_id)
+        data = TVTimeScraperService.get_status(task_id)
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc

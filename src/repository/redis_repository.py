@@ -45,3 +45,12 @@ class RedisOMClient:
             return data.to_watch["Not started yet"]
         else:
             return {}
+        
+    def add_tvtime_account_to_user(self, username, tvtime_username):
+        self.redis.sadd(username, tvtime_username)
+
+    def check_tvtime_account_of_user(self, username, tvtime_username):
+        if self.redis.sismember(username, tvtime_username) == 1:
+            return True
+        else:
+            return False

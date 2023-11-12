@@ -9,14 +9,10 @@ class UserIn(BaseModel):
 
 
 class UserOut(BaseModel):
-    user_id: UUID
+    user_id: str
     username: str
-    tv_time_username: str
-    disabled: bool | None = None
-
-
-class UserDB(UserOut):
-    hashed_password: str
+    is_active: bool = True
+    is_admin: bool = False
 
 
 class TVTimeUser(BaseModel):

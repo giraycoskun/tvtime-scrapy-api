@@ -30,10 +30,11 @@ However it only uses username and password to scrape data and does not store the
 ## Docker
 
 ```bash
-docker pull redis/redis-stack
+docker build -t tvtime-scrapy-app .
+docker run -p 8000:8000 tvtime-scrapy-app
 ```
 
-## Local Development
+## Local Development Useful Commands
 
 ```bash
 poetry export -f requirements.txt --output requirements.txt --with docs,dev,test

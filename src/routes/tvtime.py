@@ -31,11 +31,10 @@ router = APIRouter(
 
 @router.get("/status", summary="Get Data Status")
 def get_status(
-    current_user: Annotated[UserOut, Depends(get_current_active_user)],
     tvtime_data_service: Annotated[TVTimeDataService, Depends()],
 ) -> JSONResponse:
     try:
-        response = tvtime_data_service.get_status(current_user.username)
+        response = tvtime_data_service.get_status()
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
@@ -44,10 +43,10 @@ def get_status(
 
 @router.get("/all-data", summary="Get All Data")
 def get_all_data(
-    username: str, tvtime_data_service: Annotated[TVTimeDataService, Depends()]
+    tvtime_data_service: Annotated[TVTimeDataService, Depends()],
 ):
     try:
-        data = tvtime_data_service.get_all_data(username)
+        data = tvtime_data_service.get_all_data()
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
@@ -56,10 +55,10 @@ def get_all_data(
 
 @router.get("/watch-next", summary="Get Watch Next List")
 def get_watch_next(
-    username: str, tvtime_data_service: Annotated[TVTimeDataService, Depends()]
+    tvtime_data_service: Annotated[TVTimeDataService, Depends()],
 ):
     try:
-        response = tvtime_data_service.get_watch_next(username)
+        response = tvtime_data_service.get_watch_next()
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
@@ -68,10 +67,10 @@ def get_watch_next(
 
 @router.get("/not-watched-for-while", summary="Get Not Watched For While List")
 def get_not_watched_for_while(
-    username: str, tvtime_data_service: Annotated[TVTimeDataService, Depends()]
+    tvtime_data_service: Annotated[TVTimeDataService, Depends()]
 ):
     try:
-        response = tvtime_data_service.get_not_watched_for_while(username)
+        response = tvtime_data_service.get_not_watched_for_while()
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
@@ -80,10 +79,10 @@ def get_not_watched_for_while(
 
 @router.get("/not-started-yet", summary="Get Not Started Yet List")
 def get_not_started_yet(
-    username: str, tvtime_data_service: Annotated[TVTimeDataService, Depends()]
+    tvtime_data_service: Annotated[TVTimeDataService, Depends()]
 ):
     try:
-        response = tvtime_data_service.get_not_started_yet(username)
+        response = tvtime_data_service.get_not_started_yet()
     except RedisConnectionError as exc:
         logger.error(exc)
         raise HTTPException(status_code=404, detail="Redis Connection Error") from exc
@@ -92,7 +91,6 @@ def get_not_started_yet(
 
 @router.get("/show", summary="Get Show")
 def get_show(
-    username: str,
     show: Show,
     tvtime_data_service: Annotated[TVTimeDataService, Depends()],
 ):
